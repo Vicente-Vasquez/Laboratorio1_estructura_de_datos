@@ -40,10 +40,21 @@ Recuerda que la lista almacena punteros, por lo que
 debes reservar memoria para cada elemento que agregues.
 Al finalizar retorna la lista creada.
 */
-
-List* crea_lista() {
+List* crea_lista(){
    List* L = create_list();
+   for(int i = 0; i < 10; i++){
+      int* temp = malloc(sizeof(int));
+      *temp = i + 1;
+      if(i == 0){
+         pushFront(L, temp);
+      }
+      else{
+         next(L);
+         pushCurrent(L, temp);
+      }
+   }
    return L;
+   
 }
 
 /*
@@ -52,7 +63,17 @@ Crea una función que reciba una lista de enteros (int*) y
 retorne la suma de sus elementos.
 */
 int sumaLista(List *L) {
-   return 0;
+    int suma = 0;
+    int *elemento;
+
+    elemento = first(L);
+
+    while (elemento != NULL) {
+        suma += *elemento;
+        elemento = next(L);
+    }
+
+    return suma;
 }
 
 /*
@@ -65,7 +86,17 @@ posiciona en el elemento anterior.
 */
 
 void eliminaElementos(List*L, int elem){
-
+   int *elemento;
+   elemento = first(L);
+   while(elemento != NULL){
+      if(*elemento == elem){
+         popCurrent(L);
+         elemento = next(L);
+      }
+      else{
+         elemento = next(L);
+      }
+   } 
 }
 
 /*
@@ -76,7 +107,22 @@ Puedes usar una pila auxiliar.
 */
 
 void copia_pila(Stack* P1, Stack* P2) {
+   Stack* Paux = create_stack();
+   while(top(P1) != NULL){
+      int *elemento;
+      elemento = top(P1);
+      push(Paux, elemento);
+      pop(P1);
+   }
+   while(top(Paux) != NULL){
+      int *elementoA;
+      elementoA = top(Paux);
+      push(P1, elementoA);
+      push(P2, elementoA);
+      pop(Paux);
+   }
 }
+
 
 /*
 Ejercicio 5.
@@ -86,6 +132,27 @@ paraéntesis balanceados. Retorna 1 si están balanceados,
 */
 
 int parentesisBalanceados(char *cadena) {
-   return 0;
-}
+          Stack* P=create_stack();
+
+          for (int i=0;cadena[i]!='\0';i++)
+          {
+             char temp=cadena[i]; 
+             if (temp=='('||temp=='{'||temp=='[')
+             {
+                char *temp2=(char*)malloc(sizeof(char));
+                *temp2=temp;
+                push(P,temp2);
+             }
+             else if (temp==')'||temp=='}'||temp==']')
+             {
+                char* temp3=(char*)pop(P);
+                if (temp3==NULL) return 0;
+                if ((temp==')' && *temp3 !='(') || (temp=='}' && *temp3 !='{') || (temp==']' && *temp3 !='[')) return 0;
+                free(temp3);
+             }
+          }
+          if (pop(P)!=NULL) return 0;
+
+          return 1;
+       }
 
